@@ -1,0 +1,29 @@
+{
+    "name": "haruya-nishikubo/laravel-transporter",
+    "authors": [
+        {
+            "name": "Haruya Nishikubo",
+            "email": "haruya.nishikubo@gmail.com"
+        }
+    ],
+    "require": {
+        "laravel/laravel": "^9",
+        "google/cloud-bigquery": "^1.24",
+        "shopify/shopify-api": "^4.3"
+    },
+    "autoload": {
+      "psr-4": {
+        "HaruyaNishikubo\\Transporter\\": "src/"
+      }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "HaruyaNishikubo\\Transporter\\TransporterServiceProvider"
+        ]
+      }
+    },
+    "require-dev": {
+        "laravel/pint": "^1.5"
+    }
+}
