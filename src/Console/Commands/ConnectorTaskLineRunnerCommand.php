@@ -78,8 +78,10 @@ class ConnectorTaskLineRunnerCommand extends Command
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
             }
 
-            foreach ($this->source_repository->collection() as $entity) {
-                $this->registerSubsetTaskLine($entity);
+            if ($this->hasSubset()) {
+                foreach ($this->source_repository->collection() as $entity) {
+                    $this->registerSubsetTaskLine($entity);
+                }
             }
 
             if (! $this->is_run) {
@@ -280,5 +282,14 @@ class ConnectorTaskLineRunnerCommand extends Command
             ->save();
 
         return $this;
+    }
+
+    protected function hasSubset(): bool
+    {
+        return in_array($this->connector_task_line->source_repository, [
+            ShopifyRestCustomerRepository::class,
+            ShopifyRestOrderRepository::class,
+            ShopifyRestProductRepository::class,
+        ]);
     }
 }
