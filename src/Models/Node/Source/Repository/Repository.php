@@ -42,4 +42,9 @@ abstract class Repository
 
         return $this;
     }
+
+    public function setAttributes(array $attributes): static
+    {
+        return $this;
+    }
 }

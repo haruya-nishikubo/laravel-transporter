@@ -6,6 +6,10 @@ use HaruyaNishikubo\Transporter\Models\ConnectorTask;
 use HaruyaNishikubo\Transporter\Models\ConnectorTaskLine;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as SourceRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository as ShopifyRestMetafieldRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository as ShopifyRestCustomerRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository as ShopifyRestOrderRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository as ShopifyRestProductRepository;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Throwable;
@@ -71,7 +75,11 @@ class ConnectorTaskLineRunnerCommand extends Command
                             ->collection()
                             ->count()
                     ),
-                ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+            }
+
+            foreach ($this->source_repository->collection() as $entity) {
+                $this->registerSubsetTaskLine($entity);
             }
 
             if (! $this->is_run) {
@@ -173,6 +181,9 @@ class ConnectorTaskLineRunnerCommand extends Command
                 $connector->sourceNode
             );
 
+        $this->source_repository
+            ->setAttributes($this->connector_task_line->source_repository_attributes ?? []);
+
         return $this;
     }
 
@@ -212,6 +223,61 @@ class ConnectorTaskLineRunnerCommand extends Command
     {
         $this->target_repository
             ->load();
+
+        return $this;
+    }
+
+    protected function registerSubsetTaskLine(array $entity): self
+    {
+        $connector_task = $this->connector_task_line
+            ->connectorTask;
+
+        $connector_task_line = null;
+
+        switch ($this->connector_task_line->source_repository) {
+            case ShopifyRestCustomerRepository::class:
+            case ShopifyRestOrderRepository::class:
+            case ShopifyRestProductRepository::class:
+                $connector_task_line = $connector_task
+                    ->connectorTaskLines()
+                    ->make([
+                        'status' => ConnectorTaskLine::STATUS_READY,
+                        'source_repository' => ShopifyRestMetafieldRepository::class,
+                        'source_repository_attributes' => [
+                            'owner_id' => $entity['id'],
+                            'owner_resource' => match ($this->connector_task_line->source_repository) {
+                                ShopifyRestCustomerRepository::class => 'customers',
+                                ShopifyRestOrderRepository::class => 'orders',
+                                ShopifyRestProductRepository::class => 'products',
+                            }
+                        ],
+                        'target_repository' => $this->connector_task_line
+                            ->target_repository,
+                        'connector_task_id' => $connector_task->id,
+                    ]);
+
+                break;
+        }
+
+        if (empty($connector_task_line)) {
+            return $this;
+        }
+
+        if ($this->is_debug) {
+            $this->info(json_encode([
+                'message' => sprintf(
+                    'connector_task_line: %s',
+                    json_encode($connector_task_line->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
+                ),
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        }
+
+        if (! $this->is_run) {
+            return $this;
+        }
+
+        $connector_task_line
+            ->save();
 
         return $this;
     }

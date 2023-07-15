@@ -20,8 +20,13 @@ class ConnectorTaskLine extends Model
     protected $fillable = [
         'connector_task_id',
         'source_repository',
+        'source_repository_attributes',
         'target_repository',
         'status',
+    ];
+
+    protected $casts = [
+        'source_repository_attributes' => 'array',
     ];
 
     public function connectorTask(): BelongsTo
