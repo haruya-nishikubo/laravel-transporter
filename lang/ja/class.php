@@ -24,4 +24,5 @@ return [
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository::class => 'shopify.product',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository::class => 'shopify.order',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository::class => 'shopify.customer',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository::class => 'shopify.metafield',
 ];
