@@ -2,7 +2,6 @@
 
 namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest;
 
-use Carbon\Carbon;
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\MetafieldCollection;
 
 class MetafieldRepository extends Repository

@@ -8,10 +8,12 @@ use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as Sour
 use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository as ShopifyRestMetafieldRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository as ShopifyRestCustomerRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentOrderRepository as ShopifyRestFulfillmentOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentRepository as ShopifyRestFulfillmentRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository as ShopifyRestOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository as ShopifyRestProductRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use InvalidArgumentException;
 use Throwable;
 
@@ -241,6 +243,7 @@ class ConnectorTaskLineRunnerCommand extends Command
             case ShopifyRestOrderRepository::class:
                 $this->createConnectorTaskLineOfShopifyMetafield($entity['id'], 'orders');
                 $this->createConnectorTaskLineOfShopifyFulfillment($entity['id']);
+                $this->createConnectorTaskLineOfShopifyFulfillmentOrder($entity['id']);
 
                 break;
 
@@ -297,6 +300,9 @@ class ConnectorTaskLineRunnerCommand extends Command
         $connector_task_line
             ->save();
 
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+
         return $connector_task_line;
     }
 
@@ -334,6 +340,61 @@ class ConnectorTaskLineRunnerCommand extends Command
         $connector_task_line
             ->save();
 
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+
         return $connector_task_line;
+    }
+
+    protected function createConnectorTaskLineOfShopifyFulfillmentOrder(int $order_id): ConnectorTaskLine
+    {
+        $connector_task = $this->connector_task_line
+            ->connectorTask;
+
+        $connector_task_line = $connector_task
+            ->connectorTaskLines()
+            ->make([
+                'status' => ConnectorTaskLine::STATUS_READY,
+                'source_repository' => ShopifyRestFulfillmentOrderRepository::class,
+                'source_repository_attributes' => [
+                    'order_id' => $order_id,
+                ],
+                'target_repository' => $this->connector_task_line
+                    ->target_repository,
+                'connector_task_id' => $connector_task->id,
+            ]);
+
+        if ($this->is_debug) {
+            $this->info(json_encode([
+                'message' => sprintf(
+                    'connector_task_line: %s',
+                    json_encode($connector_task_line->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
+                ),
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        }
+
+        if (! $this->is_run) {
+            return $connector_task_line;
+        }
+
+        $connector_task_line
+            ->save();
+
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+
+        return $connector_task_line;
+    }
+
+    protected function enqueueConnectorTaskLineOfSubset(ConnectorTaskLine $connector_task_line, ConnectorTask $connector_task): self
+    {
+        Artisan::queue('transporter:connector-task-line-runner', [
+            '--connector-task-line-id' => $connector_task_line->id,
+            '--memory-limit' => -1,
+            '--run' => true,
+        ])->afterCommit()
+            ->onQueue(sprintf('transporter:connector-%d', $connector_task->connector_id));
+
+        return $this;
     }
 }

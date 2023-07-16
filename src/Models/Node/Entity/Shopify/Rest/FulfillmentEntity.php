@@ -6,7 +6,7 @@ use HaruyaNishikubo\Transporter\Models\Node\Entity\Entity;
 
 class FulfillmentEntity extends Entity
 {
-    protected string $table_name = 'products';
+    protected string $table_name = 'fulfillments';
 
     protected array $fields = [
         'id' => self::FIELD_TYPE_INT64,

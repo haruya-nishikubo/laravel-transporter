@@ -2,28 +2,28 @@
 
 namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest;
 
-use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\FulfillmentCollection;
+use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\FulfillmentOrderCollection;
 
-class FulfillmentRepository extends Repository
+class FulfillmentOrderRepository extends Repository
 {
     protected int $order_id;
 
     public function listUrl(): string
     {
-        return sprintf('/orders/%d/fulfillments.json', $this->order_id);
+        return sprintf('/orders/%d/fulfillment_orders.json', $this->order_id);
     }
 
     public function prepare(): static
     {
         // collection
-        $this->collection = new FulfillmentCollection();
+        $this->collection = new FulfillmentOrderCollection();
 
         return $this;
     }
 
     protected function rootKey(): string
     {
-        return 'fulfillments';
+        return 'fulfillment_orders';
     }
 
     public function setAttributes(array $attributes): static

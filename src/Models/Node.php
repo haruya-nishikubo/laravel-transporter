@@ -23,6 +23,10 @@ class Node extends Model
         'secret',
     ];
 
+    protected $hidden = [
+        'secret',
+    ];
+
     public function secret(): Attribute
     {
         return Attribute::make(
