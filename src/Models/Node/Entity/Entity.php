@@ -9,7 +9,6 @@ abstract class Entity
     protected string $table_name;
     protected array $fields = [];
     protected array $attributes = [];
-    protected bool $has_updated_at = true;
     protected string $updated_at_name = 'updated_at';
 
     public const FIELD_TYPE_BOOLEAN = 'BOOLEAN';
@@ -68,7 +67,7 @@ abstract class Entity
 
     public function hasUpdatedAt(): bool
     {
-        return $this->has_updated_at;
+        return isset($this->fields[$this->updated_at_name]);
     }
 
     public function updatedAtName(): string

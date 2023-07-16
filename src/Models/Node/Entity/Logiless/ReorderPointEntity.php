@@ -18,6 +18,4 @@ class ReorderPointEntity extends Entity
         'article' => self::FIELD_TYPE_JSON,
         'warehouse' => self::FIELD_TYPE_JSON,
     ];
-
-    protected bool $has_updated_at = false;
 }

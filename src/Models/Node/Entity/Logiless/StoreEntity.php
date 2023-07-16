@@ -12,6 +12,4 @@ class StoreEntity extends Entity
         'id' => self::FIELD_TYPE_INT64,
         'name' => self::FIELD_TYPE_STRING,
     ];
-
-    protected bool $has_updated_at = false;
 }
