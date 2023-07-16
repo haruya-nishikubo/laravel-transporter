@@ -15,6 +15,7 @@ use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\Fulfi
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentRepository as ShopifyRestFulfillmentRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository as ShopifyRestOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository as ShopifyRestProductRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\RefundRepository as ShopifyRestRefundRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\VariantRepository as ShopifyRestVariantRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -261,6 +262,9 @@ class ConnectorTaskLineRunnerCommand extends Command
                     'order_id' => $entity['id'],
                 ]);
                 $this->createConnectorTaskLineAsSubset(ShopifyRestFulfillmentOrderRepository::class, [
+                    'order_id' => $entity['id'],
+                ]);
+                $this->createConnectorTaskLineAsSubset(ShopifyRestRefundRepository::class, [
                     'order_id' => $entity['id'],
                 ]);
 
