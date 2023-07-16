@@ -18,6 +18,7 @@ use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\Produ
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\VariantRepository as ShopifyRestVariantRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Throwable;
 
@@ -58,6 +59,8 @@ class ConnectorTaskLineRunnerCommand extends Command
                 ->setIsRun();
         } catch (Throwable $e) {
             $this->error($e->getMessage());
+
+            Log::error($e->getMessage());
 
             return self::FAILURE;
         }
@@ -125,6 +128,8 @@ class ConnectorTaskLineRunnerCommand extends Command
             ])->save();
         } catch (Throwable $e) {
             $this->error($e->getMessage());
+
+            Log::error($e->getMessage());
 
             $this->connector_task_line
                 ->fill([
@@ -276,7 +281,7 @@ class ConnectorTaskLineRunnerCommand extends Command
                 break;
 
             case ShopifyRestVariantRepository::class:
-                $this->createConnectorTaskLineAsSubset(ShopifyRestVariantRepository::class, [
+                $this->createConnectorTaskLineAsSubset(ShopifyRestInventoryItemRepository::class, [
                     'inventory_item_id' => $entity['inventory_item_id'],
                 ]);
 

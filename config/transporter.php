@@ -81,9 +81,10 @@ return [
     // shopify
     \HaruyaNishikubo\Transporter\Models\Node::TYPE_SHOPIFY => [
         'source_repositories' => [
+            \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectRepository::class,
             \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository::class,
-            \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository::class,
             \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository::class,
+            \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository::class,
         ],
     ],
 ];

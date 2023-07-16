@@ -6,11 +6,9 @@ use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\CollectColle
 
 class CollectRepository extends Repository
 {
-    protected int $product_id;
-
     public function listUrl(): string
     {
-        return sprintf('/collects.json?product_id=%d', $this->product_id);
+        return '/collects.json';
     }
 
     public function prepare(): static
@@ -24,12 +22,5 @@ class CollectRepository extends Repository
     protected function rootKey(): string
     {
         return 'collects';
-    }
-
-    public function setAttributes(array $attributes): static
-    {
-        $this->product_id = $attributes['product_id'];
-
-        return $this;
     }
 }
