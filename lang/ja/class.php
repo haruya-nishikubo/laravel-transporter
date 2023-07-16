@@ -27,4 +27,7 @@ return [
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository::class => 'shopify.metafield',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentRepository::class => 'shopify.fulfillment',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentOrderRepository::class => 'shopify.fulfillment_order',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\VariantRepository::class => 'shopify.variant',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectRepository::class => 'shopify.collect',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectionRepository::class => 'shopify.collection',
 ];
