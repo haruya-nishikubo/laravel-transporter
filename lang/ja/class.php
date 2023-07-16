@@ -25,4 +25,6 @@ return [
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository::class => 'shopify.order',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository::class => 'shopify.customer',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository::class => 'shopify.metafield',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentRepository::class => 'shopify.fulfillment',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentOrderRepository::class => 'shopify.fulfillment_order',
 ];
