@@ -3,7 +3,6 @@
 namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest;
 
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\CollectCollection;
-use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\VariantCollection;
 
 class CollectRepository extends Repository
 {
