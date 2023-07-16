@@ -13,6 +13,7 @@ use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\Fulfi
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository as ShopifyRestOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository as ShopifyRestProductRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use InvalidArgumentException;
 use Throwable;
 
@@ -299,6 +300,9 @@ class ConnectorTaskLineRunnerCommand extends Command
         $connector_task_line
             ->save();
 
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+
         return $connector_task_line;
     }
 
@@ -335,6 +339,9 @@ class ConnectorTaskLineRunnerCommand extends Command
 
         $connector_task_line
             ->save();
+
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
 
         return $connector_task_line;
     }
@@ -373,6 +380,21 @@ class ConnectorTaskLineRunnerCommand extends Command
         $connector_task_line
             ->save();
 
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+
         return $connector_task_line;
+    }
+
+    protected function enqueueConnectorTaskLineOfSubset(ConnectorTaskLine $connector_task_line, ConnectorTask $connector_task): self
+    {
+        Artisan::queue('transporter:connector-task-line-runner', [
+            '--connector-task-line-id' => $connector_task_line->id,
+            '--memory-limit' => -1,
+            '--run' => true,
+        ])->afterCommit()
+            ->onQueue(sprintf('transporter:connector-%d', $connector_task->connector_id));
+
+        return $this;
     }
 }
