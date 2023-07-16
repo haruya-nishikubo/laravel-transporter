@@ -8,6 +8,7 @@ use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as Sour
 use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository as ShopifyRestMetafieldRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository as ShopifyRestCustomerRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\InventoryItemRepository as ShopifyRestInventoryItemRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentOrderRepository as ShopifyRestFulfillmentOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentRepository as ShopifyRestFulfillmentRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository as ShopifyRestOrderRepository;
@@ -253,6 +254,11 @@ class ConnectorTaskLineRunnerCommand extends Command
                 $this->createConnectorTaskLineOfShopifyVariant($entity['id']);
 
                 break;
+
+            case ShopifyRestVariantRepository::class:
+                $this->createConnectorTaskLineOfShopifyInventoryItem($entity['inventory_item_id']);
+
+                break;
         }
 
         return $this;
@@ -264,6 +270,7 @@ class ConnectorTaskLineRunnerCommand extends Command
             ShopifyRestCustomerRepository::class,
             ShopifyRestOrderRepository::class,
             ShopifyRestProductRepository::class,
+            ShopifyRestVariantRepository::class,
         ]);
     }
 
@@ -400,6 +407,46 @@ class ConnectorTaskLineRunnerCommand extends Command
                 'source_repository' => ShopifyRestVariantRepository::class,
                 'source_repository_attributes' => [
                     'product_id' => $product_id,
+                ],
+                'target_repository' => $this->connector_task_line
+                    ->target_repository,
+                'connector_task_id' => $connector_task->id,
+            ]);
+
+        if ($this->is_debug) {
+            $this->info(json_encode([
+                'message' => sprintf(
+                    'connector_task_line: %s',
+                    json_encode($connector_task_line->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
+                ),
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        }
+
+        if (! $this->is_run) {
+            return $connector_task_line;
+        }
+
+        $connector_task_line
+            ->save();
+
+        // queue
+        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+
+        return $connector_task_line;
+    }
+
+    protected function createConnectorTaskLineOfShopifyInventoryItem(int $inventory_item_id): ConnectorTaskLine
+    {
+        $connector_task = $this->connector_task_line
+            ->connectorTask;
+
+        $connector_task_line = $connector_task
+            ->connectorTaskLines()
+            ->make([
+                'status' => ConnectorTaskLine::STATUS_READY,
+                'source_repository' => ShopifyRestInventoryItemRepository::class,
+                'source_repository_attributes' => [
+                    'inventory_item_id' => $inventory_item_id,
                 ],
                 'target_repository' => $this->connector_task_line
                     ->target_repository,
