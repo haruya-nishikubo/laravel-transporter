@@ -4,13 +4,13 @@ namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest
 
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\RefundCollection;
 
-class RefundRepository extends Repository
+class TransactionRepository extends Repository
 {
     protected int $order_id;
 
     public function listUrl(): string
     {
-        return sprintf('/orders/%d/refunds.json', $this->order_id);
+        return sprintf('/orders/%d/transactions.json', $this->order_id);
     }
 
     public function prepare(): static
@@ -23,7 +23,7 @@ class RefundRepository extends Repository
 
     protected function rootKey(): string
     {
-        return 'refunds';
+        return 'transactions';
     }
 
     public function setAttributes(array $attributes): static
