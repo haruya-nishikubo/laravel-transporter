@@ -13,6 +13,4 @@ class LocationEntity extends Entity
         'code' => self::FIELD_TYPE_STRING,
         'name' => self::FIELD_TYPE_STRING,
     ];
-
-    protected bool $has_updated_at = false;
 }
