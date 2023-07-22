@@ -22,6 +22,14 @@ php artisan transporter:connector-task-register --run
 
 ### queue:work
 ```shell
-php artisan queue:work --queue=transporter --stop-when-empty
+php artisan queue:work --queue=transporter:connector-<connector-id> --stop-when-empty
 ```
+
+# Note
+## Source
+- Shopify
+- Logiless
+
+## Target
+- BigQuery
 
