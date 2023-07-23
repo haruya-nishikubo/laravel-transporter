@@ -47,6 +47,8 @@ class ConnectorTaskLineRunnerCommand extends Command
     protected SourceRepository $source_repository;
     protected TargetRepository $target_repository;
 
+    protected array $registered_connector_task_lines = [];
+
     /**
      * Execute the console command.
      *
@@ -296,6 +298,12 @@ class ConnectorTaskLineRunnerCommand extends Command
                 break;
 
             case ShopifyRestCollectRepository::class:
+                if (isset($this->registered_connector_task_lines[ShopifyRestCollectionRepository::class][$entity['collection_id']])) {
+                    break;
+                }
+
+                $this->registered_connector_task_lines[ShopifyRestCollectionRepository::class][$entity['collection_id']] = true;
+
                 $this->createConnectorTaskLineAsSubset(ShopifyRestCollectionRepository::class, [
                     'collection_id' => $entity['collection_id'],
                 ]);
