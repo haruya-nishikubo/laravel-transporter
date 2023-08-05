@@ -5,7 +5,7 @@ namespace HaruyaNishikubo\Transporter\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ConnectorTaskLine extends Model
@@ -35,8 +35,8 @@ class ConnectorTaskLine extends Model
         return $this->belongsTo(ConnectorTask::class);
     }
 
-    public function connectorTaskLineLog(): HasOne
+    public function connectorTaskLineLogs(): HasMany
     {
-        return $this->hasOne(ConnectorTaskLineLog::class);
+        return $this->hasMany(ConnectorTaskLineLog::class);
     }
 }

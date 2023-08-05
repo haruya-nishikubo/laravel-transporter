@@ -2,7 +2,6 @@
 
 namespace HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Bigquery;
 
-use HaruyaNishikubo\Transporter\Models\Connector;
 use HaruyaNishikubo\Transporter\Models\Node;
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Collection;
 use HaruyaNishikubo\Transporter\Models\Node\Target\Client\Bigquery\Client;
@@ -12,9 +11,8 @@ class Repository extends BaseRepository
 {
     protected string $dataset;
 
-    public function __construct(Connector $connector, Node $node, Collection $collection)
+    public function __construct(Node $node, Collection $collection)
     {
-        $this->connector = $connector;
         $this->node = $node;
 
         $this->client = new Client([
@@ -40,14 +38,12 @@ class Repository extends BaseRepository
     {
         $sql = $this->createTableIfNotExistsSql();
 
-        $this->connector
-            ->connectorLogs()
-            ->create([
-                'label' => __FUNCTION__,
-                'message' => [
-                    'sql' => $sql,
-                ],
-            ]);
+        $this->appendLogs([
+            'label' => __FUNCTION__,
+            'message' => [
+                'sql' => $sql,
+            ],
+        ]);
 
         $this->client
             ->query($sql);
@@ -59,14 +55,12 @@ class Repository extends BaseRepository
     {
         $sql = $this->createOrReplaceWorkingTableSql();
 
-        $this->connector
-            ->connectorLogs()
-            ->create([
-                'label' => __FUNCTION__,
-                'message' => [
-                    'sql' => $sql,
-                ],
-            ]);
+        $this->appendLogs([
+            'label' => __FUNCTION__,
+            'message' => [
+                'sql' => $sql,
+            ],
+        ]);
 
         $this->client
             ->query($sql);
@@ -76,17 +70,15 @@ class Repository extends BaseRepository
 
     protected function insertWorkingTable(): self
     {
-        $this->connector
-            ->connectorLogs()
-            ->create([
-                'label' => __FUNCTION__,
-                'message' => [
-                    'dataset' => $this->dataset,
-                    'working_table' => $this->workingTableName(),
-                    'count' => $this->collection
-                        ->count(),
-                ],
-            ]);
+        $this->appendLogs([
+            'label' => __FUNCTION__,
+            'message' => [
+                'dataset' => $this->dataset,
+                'working_table' => $this->workingTableName(),
+                'count' => $this->collection
+                    ->count(),
+            ],
+        ]);
 
         $this->client
             ->load($this->dataset, $this->workingTableName(), $this->collection);
@@ -98,14 +90,12 @@ class Repository extends BaseRepository
     {
         $sql = $this->mergeSql();
 
-        $this->connector
-            ->connectorLogs()
-            ->create([
-                'label' => __FUNCTION__,
-                'message' => [
-                    'sql' => $sql,
-                ],
-            ]);
+        $this->appendLogs([
+            'label' => __FUNCTION__,
+            'message' => [
+                'sql' => $sql,
+            ],
+        ]);
 
         $this->client
             ->query($sql);
@@ -117,14 +107,12 @@ class Repository extends BaseRepository
     {
         $sql = $this->dropWorkingTableSql();
 
-        $this->connector
-            ->connectorLogs()
-            ->create([
-                'label' => __FUNCTION__,
-                'message' => [
-                    'sql' => $sql,
-                ],
-            ]);
+        $this->appendLogs([
+            'label' => __FUNCTION__,
+            'message' => [
+                'sql' => $sql,
+            ],
+        ]);
 
         $this->client
             ->query($sql);

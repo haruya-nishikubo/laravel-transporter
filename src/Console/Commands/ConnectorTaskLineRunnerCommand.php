@@ -189,14 +189,12 @@ class ConnectorTaskLineRunnerCommand extends Command
 
     protected function setSourceRepository(): self
     {
-        $connector = $this->connector_task_line
-            ->connectorTask
-            ->connector;
-
         $this->source_repository = new $this->connector_task_line
             ->source_repository(
-                $connector,
-                $connector->sourceNode
+                $this->connector_task_line
+                    ->connectorTask
+                    ->connector
+                    ->sourceNode
             );
 
         $this->source_repository
@@ -207,14 +205,12 @@ class ConnectorTaskLineRunnerCommand extends Command
 
     protected function setTargetRepository(): self
     {
-        $connector = $this->connector_task_line
-            ->connectorTask
-            ->connector;
-
         $this->target_repository = new $this->connector_task_line
             ->target_repository(
-                $connector,
-                $connector->targetNode,
+                $this->connector_task_line
+                    ->connectorTask
+                    ->connector
+                    ->targetNode,
                 $this->source_repository
                     ->collection()
             );
@@ -234,6 +230,10 @@ class ConnectorTaskLineRunnerCommand extends Command
             ->prepare()
             ->extract();
 
+        $this->connector_task_line
+            ->connectorTaskLineLogs()
+            ->createMany($this->source_repository->logs());
+
         return $this;
     }
 
@@ -241,6 +241,10 @@ class ConnectorTaskLineRunnerCommand extends Command
     {
         $this->target_repository
             ->load();
+
+        $this->connector_task_line
+            ->connectorTaskLineLogs()
+            ->createMany($this->target_repository->logs());
 
         return $this;
     }
