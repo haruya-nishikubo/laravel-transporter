@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Transporter\Connector\ConnectorTaskController;
 use App\Http\Controllers\Transporter\ConnectorController;
 use App\Http\Controllers\Transporter\Node\Oauth\LogilessController as OauthLogilessController;
 use App\Http\Controllers\Transporter\Node\Secret\BigqueryController;
@@ -13,10 +12,6 @@ Route::middleware(['auth'])
     ->prefix('transporter')
     ->name('transporter.')
     ->group(function () {
-        Route::resource('connector.connector_task', ConnectorTaskController::class)
-            ->only([
-                'show',
-            ]);
         Route::resource('connector', ConnectorController::class);
     });
 
