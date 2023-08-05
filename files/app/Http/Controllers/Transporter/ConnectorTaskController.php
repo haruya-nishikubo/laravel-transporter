@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Transporter\Connector;
+namespace App\Http\Controllers\Transporter;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transporter\Connector\ConnectorTask\IndexRequest;
-use HaruyaNishikubo\Transporter\Models\Connector;
+use App\Http\Requests\Transporter\ConnectorTask\IndexRequest;
 use HaruyaNishikubo\Transporter\Models\ConnectorTask;
 
 class ConnectorTaskController extends Controller
@@ -14,15 +13,14 @@ class ConnectorTaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(IndexRequest $request, Connector $connector)
+    public function index(IndexRequest $request)
     {
         $validated = $request->validated();
 
         $connector_tasks = $request->queryWithValidated()
             ->paginate(10);
 
-        return view('transporter::connector.connector_task.index', [
-            'connector' => $connector,
+        return view('transporter::connector_task.index', [
             'connector_tasks' => $connector_tasks,
             'criteria' => $validated,
         ]);
@@ -33,11 +31,11 @@ class ConnectorTaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Connector $connector, ConnectorTask $connector_task)
+    public function show(ConnectorTask $connector_task)
     {
-        return view('transporter::connector.connector_task.show', [
-            'connector' => $connector,
+        return view('transporter::connector_task.show', [
             'connector_task' => $connector_task,
+            'connector_task_lines' => $connector_task->connectorTaskLines()->paginate(10),
         ]);
     }
 }

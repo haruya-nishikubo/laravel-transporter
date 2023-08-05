@@ -78,12 +78,11 @@ return [
         ],
     ],
 
-    'connector_log' => [
-        'table_name' => 'ログ',
+    'connector_task_line_log' => [
+        'table_name' => 'タスク明細ログ',
         'field' => [
             'id' => 'ID',
-            'node_id' => 'Connector Node ID',
-            'connector_id' => 'Connector ID',
+            'connector_task_line_id' => 'Connector Task Line ID',
             'label' => 'Label',
             'message' => 'Message',
             'created_at' => 'Created At',

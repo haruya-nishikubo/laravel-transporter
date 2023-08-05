@@ -2,7 +2,6 @@
 
 namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest;
 
-use HaruyaNishikubo\Transporter\Models\Connector;
 use HaruyaNishikubo\Transporter\Models\Node;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Client\Shopify\Rest\Client;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as BaseRepository;
@@ -17,9 +16,8 @@ abstract class Repository extends BaseRepository
 
     abstract protected function rootKey(): string;
 
-    public function __construct(Connector $connector, Node $node)
+    public function __construct(Node $node)
     {
-        $this->connector = $connector;
         $this->node = $node;
 
         $this->client = new Client([
@@ -53,15 +51,13 @@ abstract class Repository extends BaseRepository
 
     protected function getList(): array
     {
-        $this->connector
-            ->connectorLogs()
-            ->create([
-                'label' => __FUNCTION__,
-                'message' => [
-                    'uri' => $this->listUrl(),
-                    'query' => $this->query,
-                ],
-            ]);
+        $this->appendLogs([
+            'label' => __FUNCTION__,
+            'message' => [
+                'uri' => $this->listUrl(),
+                'query' => $this->query,
+            ],
+        ]);
 
         $response = $this->client
             ->get($this->listUrl(), $this->query);

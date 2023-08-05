@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Transporter\Connector\ConnectorLog;
+namespace App\Http\Requests\Transporter\ConnectorTask;
 
-use HaruyaNishikubo\Transporter\Models\ConnectorLog;
+use HaruyaNishikubo\Transporter\Models\ConnectorTask;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +28,7 @@ class IndexRequest extends FormRequest
 
     public function queryWithValidated(): Builder
     {
-        $query = ConnectorLog::where('connector_id', $this->route('connector')->id);
+        $query = ConnectorTask::query();
 
         $query->latest($validated['sort_by'] ?? 'id');
 

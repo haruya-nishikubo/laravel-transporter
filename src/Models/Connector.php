@@ -47,11 +47,6 @@ class Connector extends Model
         return $this->hasMany(ConnectorTask::class);
     }
 
-    public function connectorLogs(): HasMany
-    {
-        return $this->hasMany(ConnectorLog::class);
-    }
-
     public function sourceRepositories(): array
     {
         return config(sprintf('transporter.%s.source_repositories', $this->sourceNode->type));

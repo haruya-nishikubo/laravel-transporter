@@ -66,4 +66,40 @@
             </x-transporter::card.default>
         </div>
     </div>
+
+    <div class="mt-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <x-transporter::card.default>
+                <x-transporter::card.header>{{ __('transporter::models.connector_task.table_name') }}</x-transporter::card.header>
+                <table class="table-auto w-full">
+                    <thead>
+                    <tr>
+                        <x-transporter::tables.th>{{ __('transporter::models.connector_task.field.id') }}</x-transporter::tables.th>
+                        <x-transporter::tables.th>{{ __('transporter::models.connector_task.field.start_cursor_at') }}</x-transporter::tables.th>
+                        <x-transporter::tables.th>{{ __('transporter::models.connector_task.field.end_cursor_at') }}</x-transporter::tables.th>
+                        <x-transporter::tables.th>{{ __('transporter::models.connector_task.field.status') }}</x-transporter::tables.th>
+                        <x-transporter::tables.th class="text-right"></x-transporter::tables.th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    @foreach($connector->connectorTasks as $connector_task)
+                        <tr>
+                            <x-transporter::tables.td>{{ $connector_task->id }}</x-transporter::tables.td>
+                            <x-transporter::tables.td>{{ $connector_task->start_cursor_at }}</x-transporter::tables.td>
+                            <x-transporter::tables.td>{{ $connector_task->end_cursor_at }}</x-transporter::tables.td>
+                            <x-transporter::tables.td>{{ $connector_task->status }}</x-transporter::tables.td>
+                            <x-transporter::tables.td class="text-right">
+                                <x-transporter::links.button-default href="{{ route('transporter.connector_task.show', $connector_task) }}">
+                                    <span class="material-icons align-middle">read_more</span>
+                                    <span>{{ __('transporter::actions.show') }}</span>
+                                </x-transporter::links.button-default>
+                            </x-transporter::tables.td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </x-transporter::card.default>
+        </div>
+    </div>
 </x-transporter::layouts.app>

@@ -5,19 +5,19 @@ namespace HaruyaNishikubo\Transporter\Console\Commands;
 use HaruyaNishikubo\Transporter\Models\ConnectorTask;
 use HaruyaNishikubo\Transporter\Models\ConnectorTaskLine;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as SourceRepository;
-use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
-use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository as ShopifyRestMetafieldRepository;
-use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectRepository as ShopifyRestCollectRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectionRepository as ShopifyRestCollectionRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectRepository as ShopifyRestCollectRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CustomerRepository as ShopifyRestCustomerRepository;
-use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\InventoryItemRepository as ShopifyRestInventoryItemRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentOrderRepository as ShopifyRestFulfillmentOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\FulfillmentRepository as ShopifyRestFulfillmentRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\InventoryItemRepository as ShopifyRestInventoryItemRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\MetafieldRepository as ShopifyRestMetafieldRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\OrderRepository as ShopifyRestOrderRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\ProductRepository as ShopifyRestProductRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\RefundRepository as ShopifyRestRefundRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\TransactionRepository as ShopifyRestTransactionRepository;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\VariantRepository as ShopifyRestVariantRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
@@ -189,14 +189,12 @@ class ConnectorTaskLineRunnerCommand extends Command
 
     protected function setSourceRepository(): self
     {
-        $connector = $this->connector_task_line
-            ->connectorTask
-            ->connector;
-
         $this->source_repository = new $this->connector_task_line
             ->source_repository(
-                $connector,
-                $connector->sourceNode
+                $this->connector_task_line
+                    ->connectorTask
+                    ->connector
+                    ->sourceNode
             );
 
         $this->source_repository
@@ -207,14 +205,12 @@ class ConnectorTaskLineRunnerCommand extends Command
 
     protected function setTargetRepository(): self
     {
-        $connector = $this->connector_task_line
-            ->connectorTask
-            ->connector;
-
         $this->target_repository = new $this->connector_task_line
             ->target_repository(
-                $connector,
-                $connector->targetNode,
+                $this->connector_task_line
+                    ->connectorTask
+                    ->connector
+                    ->targetNode,
                 $this->source_repository
                     ->collection()
             );
@@ -234,6 +230,10 @@ class ConnectorTaskLineRunnerCommand extends Command
             ->prepare()
             ->extract();
 
+        $this->connector_task_line
+            ->connectorTaskLineLogs()
+            ->createMany($this->source_repository->logs());
+
         return $this;
     }
 
@@ -241,6 +241,10 @@ class ConnectorTaskLineRunnerCommand extends Command
     {
         $this->target_repository
             ->load();
+
+        $this->connector_task_line
+            ->connectorTaskLineLogs()
+            ->createMany($this->target_repository->logs());
 
         return $this;
     }

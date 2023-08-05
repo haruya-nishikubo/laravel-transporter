@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('connector_logs', function (Blueprint $table) {
+        Schema::create('connector_task_line_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('connector_id')
+            $table->foreignId('connector_task_line_id')
                 ->constrained();
             $table->string('label')
                 ->comment('ラベル');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('connector_logs');
+        Schema::dropIfExists('connector_task_line_logs');
     }
 };

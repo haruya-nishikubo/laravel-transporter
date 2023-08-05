@@ -2,21 +2,20 @@
 
 namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository;
 
-use HaruyaNishikubo\Transporter\Models\Connector;
 use HaruyaNishikubo\Transporter\Models\Node;
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Collection;
 use HaruyaNishikubo\Transporter\Models\Node\Source\Client\Client;
 
 abstract class Repository
 {
-    protected Connector $connector;
     protected Node $node;
     protected Client $client;
     protected Collection $collection;
     protected string $start_cursor;
     protected string $end_cursor;
+    protected array $logs = [];
 
-    abstract public function __construct(Connector $connector, Node $node);
+    abstract public function __construct(Node $node);
 
     abstract public function listUrl(): string;
 
@@ -46,5 +45,17 @@ abstract class Repository
     public function setAttributes(array $attributes): static
     {
         return $this;
+    }
+
+    protected function appendLogs(array $logs): static
+    {
+        $this->logs[] = $logs;
+
+        return $this;
+    }
+
+    public function logs(): array
+    {
+        return $this->logs;
     }
 }
