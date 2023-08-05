@@ -3,7 +3,6 @@
 namespace HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest;
 
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\InventoryItemCollection;
-use HaruyaNishikubo\Transporter\Models\Node\Collection\Shopify\Rest\VariantCollection;
 
 class InventoryItemRepository extends Repository
 {

@@ -39,5 +39,4 @@ class ConnectorTaskLine extends Model
     {
         return $this->hasOne(ConnectorTaskLineLog::class);
     }
-
 }
