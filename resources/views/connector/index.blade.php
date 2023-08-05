@@ -53,10 +53,6 @@
                             <x-transporter::tables.td>{{ $connector->sourceNode->name }}</x-transporter::tables.td>
                             <x-transporter::tables.td>{{ $connector->targetNode->name }}</x-transporter::tables.td>
                             <x-transporter::tables.td class="text-right">
-                                <x-transporter::links.button-default href="{{ route('transporter.connector.connector_task.index', $connector) }}">
-                                    <span class="material-icons align-middle">task</span>
-                                    <span>{{ __('transporter::models.connector_task.table_name') }}</span>
-                                </x-transporter::links.button-default>
                                 <x-transporter::links.button-default href="{{ route('transporter.connector.show', $connector) }}">
                                     <span class="material-icons align-middle">read_more</span>
                                     <span>{{ __('transporter::actions.show') }}</span>

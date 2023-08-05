@@ -15,7 +15,6 @@ Route::middleware(['auth'])
     ->group(function () {
         Route::resource('connector.connector_task', ConnectorTaskController::class)
             ->only([
-                'index',
                 'show',
             ]);
         Route::resource('connector', ConnectorController::class);
