@@ -90,7 +90,7 @@
                             <x-transporter::tables.td>{{ $connector_task->end_cursor_at }}</x-transporter::tables.td>
                             <x-transporter::tables.td>{{ $connector_task->status }}</x-transporter::tables.td>
                             <x-transporter::tables.td class="text-right">
-                                <x-transporter::links.button-default href="{{ route('transporter.connector.connector_task.show', ['connector' => $connector, 'connector_task' => $connector_task]) }}">
+                                <x-transporter::links.button-default href="{{ route('transporter.connector_task.show', $connector_task) }}">
                                     <span class="material-icons align-middle">read_more</span>
                                     <span>{{ __('transporter::actions.show') }}</span>
                                 </x-transporter::links.button-default>

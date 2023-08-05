@@ -10,6 +10,13 @@
                     <span>{{ __('transporter::models.connector.table_name') }}</span>
                 </x-transporter::sidebar.link>
             </li>
+
+            <li class="mt-4 ml-4">
+                <x-transporter::sidebar.link :href="route('transporter.connector_task.index')" :active="request()->routeIs('transporter.connector_task.*')">
+                    <span class="material-symbols-outlined align-middle">task</span>
+                    <span>{{ __('transporter::models.connector_task.table_name') }}</span>
+                </x-transporter::sidebar.link>
+            </li>
         </ul>
         <ul class="ml-4 mt-4">
             <li>
