@@ -35,6 +35,7 @@ class ConnectorTaskController extends Controller
     {
         return view('transporter::connector_task.show', [
             'connector_task' => $connector_task,
+            'connector_task_lines' => $connector_task->connectorTaskLines()->paginate(10),
         ]);
     }
 }
