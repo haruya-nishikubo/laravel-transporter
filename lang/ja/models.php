@@ -77,4 +77,16 @@ return [
             'status' => 'ステータス',
         ],
     ],
+
+    'connector_task_line_log' => [
+        'table_name' => 'タスク明細ログ',
+        'field' => [
+            'id' => 'ID',
+            'connector_task_line_id' => 'Connector Task Line ID',
+            'label' => 'Label',
+            'message' => 'Message',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ],
+    ],
 ];
