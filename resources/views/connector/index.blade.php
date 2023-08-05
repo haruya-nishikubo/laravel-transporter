@@ -37,8 +37,6 @@
                             <x-transporter::tables.th>{{ __('transporter::models.connector.field.name') }}</x-transporter::tables.th>
                             <x-transporter::tables.th>{{ __('transporter::models.connector.field.source_node_id') }}</x-transporter::tables.th>
                             <x-transporter::tables.th>{{ __('transporter::models.connector.field.target_node_id') }}</x-transporter::tables.th>
-                            <x-transporter::tables.th></x-transporter::tables.th>
-                            <x-transporter::tables.th></x-transporter::tables.th>
                             <x-transporter::tables.th class="text-right">
                                 <x-transporter::links.button-info href="{{ route('transporter.connector.create') }}">
                                     <span class="material-icons align-middle">create</span>
@@ -59,14 +57,6 @@
                                     <span class="material-icons align-middle">task</span>
                                     <span>{{ __('transporter::models.connector_task.table_name') }}</span>
                                 </x-transporter::links.button-default>
-                            </x-transporter::tables.td>
-                            <x-transporter::tables.td class="text-right">
-                                <x-transporter::links.button-default href="{{ route('transporter.connector.connector_log.index', $connector) }}">
-                                    <span class="material-icons align-middle">list</span>
-                                    <span>{{ __('transporter::models.connector_log.table_name') }}</span>
-                                </x-transporter::links.button-default>
-                            </x-transporter::tables.td>
-                            <x-transporter::tables.td class="text-right">
                                 <x-transporter::links.button-default href="{{ route('transporter.connector.show', $connector) }}">
                                     <span class="material-icons align-middle">read_more</span>
                                     <span>{{ __('transporter::actions.show') }}</span>

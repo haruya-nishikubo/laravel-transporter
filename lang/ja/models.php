@@ -77,17 +77,4 @@ return [
             'status' => 'ステータス',
         ],
     ],
-
-    'connector_log' => [
-        'table_name' => 'ログ',
-        'field' => [
-            'id' => 'ID',
-            'node_id' => 'Connector Node ID',
-            'connector_id' => 'Connector ID',
-            'label' => 'Label',
-            'message' => 'Message',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ],
-    ],
 ];
