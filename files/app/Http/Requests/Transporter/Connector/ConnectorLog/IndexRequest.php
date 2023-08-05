@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Transporter\Connector\ConnectorLog;
 
-use HaruyaNishikubo\Transporter\Models\ConnectorLog;
+use HaruyaNishikubo\Transporter\Models\ConnectorTaskLineLog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +28,7 @@ class IndexRequest extends FormRequest
 
     public function queryWithValidated(): Builder
     {
-        $query = ConnectorLog::where('connector_id', $this->route('connector')->id);
+        $query = ConnectorTaskLineLog::where('connector_id', $this->route('connector')->id);
 
         $query->latest($validated['sort_by'] ?? 'id');
 
