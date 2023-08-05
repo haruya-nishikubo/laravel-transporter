@@ -3,13 +3,13 @@
 namespace HaruyaNishikubo\Transporter\Models;
 
 use HaruyaNishikubo\Transporter\Models\Node\Collection\Collection;
+use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as SourceRepository;
+use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Repository as SourceRepository;
-use HaruyaNishikubo\Transporter\Models\Node\Target\Repository\Repository as TargetRepository;
 
 class ConnectorTaskLine extends Model
 {
