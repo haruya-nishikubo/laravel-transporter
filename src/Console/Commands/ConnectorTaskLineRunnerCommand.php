@@ -92,6 +92,10 @@ class ConnectorTaskLineRunnerCommand extends Command
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
             }
 
+            if ($this->source_repository->hasNextQueries()) {
+                $this->registerConnectorTaskLineOfNext($this->source_repository->nextQueries());
+            }
+
             if ($this->hasSubset()) {
                 foreach ($this->source_repository->collection() as $entity) {
                     $this->registerConnectorTaskLineOfSubset($entity);
@@ -234,11 +238,18 @@ class ConnectorTaskLineRunnerCommand extends Command
         return $this;
     }
 
+    protected function registerConnectorTaskLineOfNext(array $next_queries): self
+    {
+        $this->createConnectorTaskLine($this->connector_task_line->source_repository, $next_queries);
+
+        return $this;
+    }
+
     protected function registerConnectorTaskLineOfSubset(array $entity): self
     {
         switch ($this->connector_task_line->source_repository) {
             case ShopifyRestCustomerRepository::class:
-                $this->createConnectorTaskLineAsSubset(ShopifyRestMetafieldRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestMetafieldRepository::class, [
                     'owner_id' => $entity['id'],
                     'owner_resource' => 'customers',
                 ]);
@@ -246,41 +257,41 @@ class ConnectorTaskLineRunnerCommand extends Command
                 break;
 
             case ShopifyRestOrderRepository::class:
-                $this->createConnectorTaskLineAsSubset(ShopifyRestMetafieldRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestMetafieldRepository::class, [
                     'owner_id' => $entity['id'],
                     'owner_resource' => 'orders',
                 ]);
-                $this->createConnectorTaskLineAsSubset(ShopifyRestFulfillmentRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestFulfillmentRepository::class, [
                     'order_id' => $entity['id'],
                 ]);
-                $this->createConnectorTaskLineAsSubset(ShopifyRestFulfillmentOrderRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestFulfillmentOrderRepository::class, [
                     'order_id' => $entity['id'],
                 ]);
-                $this->createConnectorTaskLineAsSubset(ShopifyRestRefundRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestRefundRepository::class, [
                     'order_id' => $entity['id'],
                 ]);
-                $this->createConnectorTaskLineAsSubset(ShopifyRestTransactionRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestTransactionRepository::class, [
                     'order_id' => $entity['id'],
                 ]);
 
                 break;
 
             case ShopifyRestProductRepository::class:
-                $this->createConnectorTaskLineAsSubset(ShopifyRestMetafieldRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestMetafieldRepository::class, [
                     'owner_id' => $entity['id'],
                     'owner_resource' => 'products',
                 ]);
-                $this->createConnectorTaskLineAsSubset(ShopifyRestVariantRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestVariantRepository::class, [
                     'product_id' => $entity['id'],
                 ]);
-                $this->createConnectorTaskLineAsSubset(ShopifyRestCollectRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestCollectRepository::class, [
                     'product_id' => $entity['id'],
                 ]);
 
                 break;
 
             case ShopifyRestVariantRepository::class:
-                $this->createConnectorTaskLineAsSubset(ShopifyRestInventoryItemRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestInventoryItemRepository::class, [
                     'inventory_item_id' => $entity['inventory_item_id'],
                 ]);
 
@@ -293,7 +304,7 @@ class ConnectorTaskLineRunnerCommand extends Command
 
                 $this->registered_connector_task_lines[ShopifyRestCollectionRepository::class][$entity['collection_id']] = true;
 
-                $this->createConnectorTaskLineAsSubset(ShopifyRestCollectionRepository::class, [
+                $this->createConnectorTaskLine(ShopifyRestCollectionRepository::class, [
                     'collection_id' => $entity['collection_id'],
                 ]);
 
@@ -314,7 +325,7 @@ class ConnectorTaskLineRunnerCommand extends Command
         ]);
     }
 
-    protected function createConnectorTaskLineAsSubset(string $source_repository, array $source_repository_attributes): ConnectorTaskLine
+    protected function createConnectorTaskLine(string $source_repository, array $source_repository_attributes): ConnectorTaskLine
     {
         $connector_task = $this->connector_task_line
             ->connectorTask;
@@ -347,12 +358,12 @@ class ConnectorTaskLineRunnerCommand extends Command
             ->save();
 
         // queue
-        $this->enqueueConnectorTaskLineOfSubset($connector_task_line, $connector_task);
+        $this->enqueueConnectorTaskLine($connector_task_line, $connector_task);
 
         return $connector_task_line;
     }
 
-    protected function enqueueConnectorTaskLineOfSubset(ConnectorTaskLine $connector_task_line, ConnectorTask $connector_task): self
+    protected function enqueueConnectorTaskLine(ConnectorTaskLine $connector_task_line, ConnectorTask $connector_task): self
     {
         Artisan::queue('transporter:connector-task-line-runner', [
             '--connector-task-line-id' => $connector_task_line->id,
