@@ -93,7 +93,7 @@ class ConnectorTaskLineRunnerCommand extends Command
             }
 
             if ($this->source_repository->hasNextPage()) {
-                $this->registerConnectorTaskLineOfNext($this->source_repository->nextPageQuery());
+                $this->registerConnectorTaskLineOfNextPage($this->source_repository->nextPageQuery());
             }
 
             if ($this->hasSubset()) {
@@ -232,10 +232,10 @@ class ConnectorTaskLineRunnerCommand extends Command
         return $this;
     }
 
-    protected function registerConnectorTaskLineOfNext(array $next_queries): self
+    protected function registerConnectorTaskLineOfNextPage(array $next_page_query): self
     {
         $this->createConnectorTaskLine($this->connector_task_line->source_repository, [
-            'query' => $next_queries,
+            'query' => $next_page_query,
         ]);
 
         return $this;
