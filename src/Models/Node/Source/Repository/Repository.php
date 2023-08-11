@@ -13,6 +13,7 @@ abstract class Repository
     protected Collection $collection;
     protected string $start_cursor;
     protected string $end_cursor;
+    protected array $query = [];
     protected array $logs = [];
     protected array $next_queries = [];
 
@@ -48,6 +49,11 @@ abstract class Repository
     public function setAttributes(array $attributes): static
     {
         return $this;
+    }
+
+    public function query(): array
+    {
+        return $this->query;
     }
 
     protected function appendLogs(array $logs): static

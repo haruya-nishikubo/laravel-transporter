@@ -64,7 +64,7 @@ abstract class Repository extends BaseRepository
             return null;
         }
 
-        return $response[self::LIMIT - 1]['id'];
+        return array_reduce($response, fn($carry, $item) => max($item['id'], $carry), 0);
     }
 
     protected function setNextQueries(array $response): static

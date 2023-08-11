@@ -240,7 +240,9 @@ class ConnectorTaskLineRunnerCommand extends Command
 
     protected function registerConnectorTaskLineOfNext(array $next_queries): self
     {
-        $this->createConnectorTaskLine($this->connector_task_line->source_repository, $next_queries);
+        $this->createConnectorTaskLine($this->connector_task_line->source_repository, [
+            'query' => $next_queries,
+        ]);
 
         return $this;
     }
