@@ -42,6 +42,8 @@ abstract class Repository extends BaseRepository
 
     protected function getList(): array
     {
+        $this->modifyQueryIfPageInfoExists();
+
         $this->appendLogs([
             'label' => __FUNCTION__,
             'message' => [
@@ -73,6 +75,18 @@ abstract class Repository extends BaseRepository
 
         if (isset($attributes['query'])) {
             $this->query = array_merge($this->query, $attributes['query']);
+        }
+
+        return $this;
+    }
+
+    protected function modifyQueryIfPageInfoExists(): static
+    {
+        if (isset($this->query['page_info'])) {
+            unset(
+                $this->query['updated_at_min'],
+                $this->query['updated_at_max']
+            );
         }
 
         return $this;

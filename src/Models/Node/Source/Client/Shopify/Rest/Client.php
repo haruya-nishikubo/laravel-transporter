@@ -83,7 +83,7 @@ class Client extends BaseClient
 
     protected function setNextPageQuery(?PageInfo $page_info): static
     {
-        if (! empty($page_info)) {
+        if (! empty($page_info) && $page_info->hasNextPage()) {
             $this->next_page_query = $page_info->getNextPageQuery();
         }
 
