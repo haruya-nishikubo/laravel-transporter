@@ -14,6 +14,7 @@ abstract class Repository
     protected string $start_cursor;
     protected string $end_cursor;
     protected array $logs = [];
+    protected array $next_queries = [];
 
     abstract public function __construct(Node $node);
 
@@ -22,6 +23,8 @@ abstract class Repository
     abstract public function prepare(): static;
 
     abstract public function extract(): static;
+
+    abstract protected function setNextQueries(array $response): static;
 
     public function collection(): Collection
     {
@@ -57,5 +60,15 @@ abstract class Repository
     public function logs(): array
     {
         return $this->logs;
+    }
+
+    public function nextQueries(): array
+    {
+        return $this->next_queries;
+    }
+
+    public function hasNextQueries(): bool
+    {
+        return ! empty($this->next_queries);
     }
 }

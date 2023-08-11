@@ -37,14 +37,7 @@ abstract class Repository extends BaseRepository
         $this->collection = $this->collection
             ->merge($response);
 
-        $since_id = $this->nextSinceId($response);
-        if (! empty($since_id)) {
-            $this->mergeQuery([
-                'since_id' => $since_id,
-            ]);
-
-            $this->extract();
-        }
+        $this->setNextQueries($response);
 
         return $this;
     }
@@ -74,9 +67,16 @@ abstract class Repository extends BaseRepository
         return $response[self::LIMIT - 1]['id'];
     }
 
-    protected function mergeQuery(array $query): static
+    protected function setNextQueries(array $response): static
     {
-        $this->query = array_merge($this->query, $query);
+        $since_id = $this->nextSinceId($response);
+        if (empty($since_id)) {
+            return $this;
+        }
+
+        $this->next_queries = array_merge($this->query, [
+            'since_id' => $since_id,
+        ]);
 
         return $this;
     }

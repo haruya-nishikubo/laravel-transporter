@@ -36,15 +36,6 @@ abstract class Repository extends BaseRepository
         $this->collection = $this->collection
             ->merge($response['data']);
 
-        $next_page = $this->nextPage($response);
-        if (! empty($next_page)) {
-            $this->mergeQuery([
-                'page' => $next_page,
-            ]);
-
-            $this->extract();
-        }
-
         return $this;
     }
 
@@ -76,9 +67,16 @@ abstract class Repository extends BaseRepository
         return $response['current_page'] + 1;
     }
 
-    protected function mergeQuery(array $query): static
+    protected function setNextQueries(array $response): static
     {
-        $this->query = array_merge($this->query, $query);
+        $next_page = $this->nextPage($response);
+        if (empty($next_page)) {
+            return $this;
+        }
+
+        $this->next_queries = array_merge($this->query, [
+            'page' => $next_page,
+        ]);
 
         return $this;
     }
