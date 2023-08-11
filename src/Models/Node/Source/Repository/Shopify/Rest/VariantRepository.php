@@ -28,6 +28,8 @@ class VariantRepository extends Repository
 
     public function setAttributes(array $attributes): static
     {
+        parent::setAttributes($attributes);
+
         $this->product_id = $attributes['product_id'];
 
         return $this;

@@ -80,4 +80,15 @@ abstract class Repository extends BaseRepository
 
         return $this;
     }
+
+    public function setAttributes(array $attributes): static
+    {
+        parent::setAttributes($attributes);
+
+        if (isset($attributes['query'])) {
+            $this->query = array_merge($this->query, $attributes['query']);
+        }
+
+        return $this;
+    }
 }

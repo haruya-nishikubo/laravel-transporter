@@ -29,6 +29,8 @@ class MetafieldRepository extends Repository
 
     public function setAttributes(array $attributes): static
     {
+        parent::setAttributes($attributes);
+
         $this->owner_resource = $attributes['owner_resource'];
         $this->owner_id = $attributes['owner_id'];
 

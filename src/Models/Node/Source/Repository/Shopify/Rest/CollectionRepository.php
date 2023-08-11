@@ -28,6 +28,8 @@ class CollectionRepository extends Repository
 
     public function setAttributes(array $attributes): static
     {
+        parent::setAttributes($attributes);
+
         $this->collection_id = $attributes['collection_id'];
 
         return $this;

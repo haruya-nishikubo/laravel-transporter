@@ -28,6 +28,8 @@ class InventoryItemRepository extends Repository
 
     public function setAttributes(array $attributes): static
     {
+        parent::setAttributes($attributes);
+
         $this->inventory_item_id = $attributes['inventory_item_id'];
 
         return $this;
