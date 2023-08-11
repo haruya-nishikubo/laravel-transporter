@@ -23,6 +23,7 @@ class ConnectorTaskLine extends Model
 
     protected $fillable = [
         'connector_task_id',
+        'parent_connector_task_line_id',
         'source_repository',
         'source_repository_attributes',
         'target_repository',

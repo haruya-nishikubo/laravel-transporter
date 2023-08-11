@@ -318,6 +318,7 @@ class ConnectorTaskLineRunnerCommand extends Command
         $connector_task_line = $connector_task
             ->connectorTaskLines()
             ->make([
+                'parent_connector_task_line_id' => $this->connector_task_line->id,
                 'status' => ConnectorTaskLine::STATUS_READY,
                 'source_repository' => $source_repository,
                 'source_repository_attributes' => $source_repository_attributes,
