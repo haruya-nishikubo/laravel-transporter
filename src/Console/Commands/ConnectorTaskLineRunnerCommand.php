@@ -192,9 +192,6 @@ class ConnectorTaskLineRunnerCommand extends Command
         $this->source_repository = $this->connector_task_line
             ->buildSourceRepository();
 
-        $this->source_repository
-            ->setAttributes($this->connector_task_line->source_repository_attributes ?? []);
-
         return $this;
     }
 
