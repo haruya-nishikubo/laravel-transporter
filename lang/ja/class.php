@@ -31,4 +31,5 @@ return [
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectRepository::class => 'shopify.collect',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\CollectionRepository::class => 'shopify.collection',
     \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\RefundRepository::class => 'shopify.refund',
+    \HaruyaNishikubo\Transporter\Models\Node\Source\Repository\Shopify\Rest\TransactionRepository::class => 'shopify.transaction',
 ];

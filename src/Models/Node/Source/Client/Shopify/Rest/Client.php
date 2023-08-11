@@ -4,6 +4,7 @@ namespace HaruyaNishikubo\Transporter\Models\Node\Source\Client\Shopify\Rest;
 
 use HaruyaNishikubo\Transporter\Models\Node\Source\Client\Client as BaseClient;
 use Shopify\Auth\FileSessionStorage;
+use Shopify\Clients\PageInfo;
 use Shopify\Clients\Rest;
 use Shopify\Context;
 
@@ -75,6 +76,17 @@ class Client extends BaseClient
         $response = $this->client
             ->get($uri, [], $query);
 
+        $this->setNextPageQuery($response->getPageInfo());
+
         return $response->getDecodedBody();
+    }
+
+    protected function setNextPageQuery(?PageInfo $page_info): static
+    {
+        if (! empty($page_info) && $page_info->hasNextPage()) {
+            $this->next_page_query = $page_info->getNextPageQuery();
+        }
+
+        return $this;
     }
 }

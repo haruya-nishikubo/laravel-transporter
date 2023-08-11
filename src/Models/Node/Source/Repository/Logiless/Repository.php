@@ -36,15 +36,6 @@ abstract class Repository extends BaseRepository
         $this->collection = $this->collection
             ->merge($response['data']);
 
-        $next_page = $this->nextPage($response);
-        if (! empty($next_page)) {
-            $this->mergeQuery([
-                'page' => $next_page,
-            ]);
-
-            $this->extract();
-        }
-
         return $this;
     }
 
@@ -58,27 +49,28 @@ abstract class Repository extends BaseRepository
             ],
         ]);
 
+        $this->setNextPageQuery();
+
         return $this->client
             ->get($this->listUrl(), $this->query);
     }
 
-    protected function nextPage(array $response): ?int
+    protected function setNextPageQuery(): static
     {
-        if ($response['total_count'] <= $response['limit']) {
-            return null;
+        if ($this->client->hasNextPage()) {
+            $this->next_page_query = array_merge($this->query, $this->client->nextPageQuery());
         }
 
-        $last_page = (int) ceil($response['total_count'] / $response['limit']);
-        if ($last_page == $response['current_page']) {
-            return null;
-        }
-
-        return $response['current_page'] + 1;
+        return $this;
     }
 
-    protected function mergeQuery(array $query): static
+    public function setAttributes(array $attributes): static
     {
-        $this->query = array_merge($this->query, $query);
+        parent::setAttributes($attributes);
+
+        if (isset($attributes['query'])) {
+            $this->query = array_merge($this->query, $attributes['query']);
+        }
 
         return $this;
     }

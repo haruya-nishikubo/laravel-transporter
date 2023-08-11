@@ -35,4 +35,9 @@ class OrderRepository extends Repository
     {
         return 'orders';
     }
+
+    public function hasSubset(): bool
+    {
+        return true;
+    }
 }

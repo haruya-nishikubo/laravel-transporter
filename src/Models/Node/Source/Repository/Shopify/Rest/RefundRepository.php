@@ -28,6 +28,8 @@ class RefundRepository extends Repository
 
     public function setAttributes(array $attributes): static
     {
+        parent::setAttributes($attributes);
+
         $this->order_id = $attributes['order_id'];
 
         return $this;

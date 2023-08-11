@@ -35,4 +35,9 @@ class CustomerRepository extends Repository
     {
         return 'customers';
     }
+
+    public function hasSubset(): bool
+    {
+        return true;
+    }
 }

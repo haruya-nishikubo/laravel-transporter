@@ -37,20 +37,13 @@ abstract class Repository extends BaseRepository
         $this->collection = $this->collection
             ->merge($response);
 
-        $since_id = $this->nextSinceId($response);
-        if (! empty($since_id)) {
-            $this->mergeQuery([
-                'since_id' => $since_id,
-            ]);
-
-            $this->extract();
-        }
-
         return $this;
     }
 
     protected function getList(): array
     {
+        $this->modifyQueryIfPageInfoExists();
+
         $this->appendLogs([
             'label' => __FUNCTION__,
             'message' => [
@@ -62,21 +55,39 @@ abstract class Repository extends BaseRepository
         $response = $this->client
             ->get($this->listUrl(), $this->query);
 
+        $this->setNextPageQuery();
+
         return $response[$this->rootKey()];
     }
 
-    protected function nextSinceId(array $response): ?int
+    protected function setNextPageQuery(): static
     {
-        if (count($response) < self::LIMIT) {
-            return null;
+        if ($this->client->hasNextPage()) {
+            $this->next_page_query = $this->client->nextPageQuery();
         }
 
-        return $response[self::LIMIT - 1]['id'];
+        return $this;
     }
 
-    protected function mergeQuery(array $query): static
+    public function setAttributes(array $attributes): static
     {
-        $this->query = array_merge($this->query, $query);
+        parent::setAttributes($attributes);
+
+        if (isset($attributes['query'])) {
+            $this->query = array_merge($this->query, $attributes['query']);
+        }
+
+        return $this;
+    }
+
+    protected function modifyQueryIfPageInfoExists(): static
+    {
+        if (isset($this->query['page_info'])) {
+            unset(
+                $this->query['updated_at_min'],
+                $this->query['updated_at_max']
+            );
+        }
 
         return $this;
     }

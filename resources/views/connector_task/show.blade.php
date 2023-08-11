@@ -41,6 +41,7 @@
                 <table class="table-auto w-full">
                     <thead>
                     <tr>
+                        <x-transporter::tables.th>{{ __('transporter::models.connector_task_line.field.id') }}</x-transporter::tables.th>
                         <x-transporter::tables.th>{{ __('transporter::models.connector_task_line.field.source_repository') }}</x-transporter::tables.th>
                         <x-transporter::tables.th>{{ __('transporter::models.connector_task_line.field.target_repository') }}</x-transporter::tables.th>
                         <x-transporter::tables.th>{{ __('transporter::models.connector_task_line.field.status') }}</x-transporter::tables.th>
@@ -50,6 +51,7 @@
                     <tbody>
                     @foreach($connector_task_lines as $connector_task_line)
                         <tr>
+                            <x-transporter::tables.td>{{ $connector_task_line->id }}</x-transporter::tables.td>
                             <x-transporter::tables.td>{{ __(sprintf('transporter::class.%s', $connector_task_line->source_repository)) }}</x-transporter::tables.td>
                             <x-transporter::tables.td>{{ __(sprintf('transporter::class.%s', $connector_task_line->target_repository)) }}</x-transporter::tables.td>
                             <x-transporter::tables.td>{{ $connector_task_line->status }}</x-transporter::tables.td>
