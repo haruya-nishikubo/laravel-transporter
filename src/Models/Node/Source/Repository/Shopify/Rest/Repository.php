@@ -37,8 +37,6 @@ abstract class Repository extends BaseRepository
         $this->collection = $this->collection
             ->merge($response);
 
-        $this->setNextQueries($response);
-
         return $this;
     }
 
@@ -55,28 +53,16 @@ abstract class Repository extends BaseRepository
         $response = $this->client
             ->get($this->listUrl(), $this->query);
 
+        $this->setNextPageQuery();
+
         return $response[$this->rootKey()];
     }
 
-    protected function nextSinceId(array $response): ?int
+    protected function setNextPageQuery(): static
     {
-        if (count($response) < self::LIMIT) {
-            return null;
+        if ($this->client->hasNextPage()) {
+            $this->next_page_query = $this->client->nextPageQuery();
         }
-
-        return array_reduce($response, fn($carry, $item) => max($item['id'], $carry), 0);
-    }
-
-    protected function setNextQueries(array $response): static
-    {
-        $since_id = $this->nextSinceId($response);
-        if (empty($since_id)) {
-            return $this;
-        }
-
-        $this->next_queries = array_merge($this->query, [
-            'since_id' => $since_id,
-        ]);
 
         return $this;
     }

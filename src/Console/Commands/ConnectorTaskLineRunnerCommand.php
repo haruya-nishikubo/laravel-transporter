@@ -92,8 +92,8 @@ class ConnectorTaskLineRunnerCommand extends Command
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
             }
 
-            if ($this->source_repository->hasNextQueries()) {
-                $this->registerConnectorTaskLineOfNext($this->source_repository->nextQueries());
+            if ($this->source_repository->hasNextPage()) {
+                $this->registerConnectorTaskLineOfNext($this->source_repository->nextPageQuery());
             }
 
             if ($this->hasSubset()) {

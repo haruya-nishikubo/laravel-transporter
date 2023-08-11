@@ -20,6 +20,8 @@ class Client extends BaseClient
 
     protected int $merchant_id;
 
+    protected array $next_page_query = [];
+
     public function __construct(array $attributes = [])
     {
         $this->fill($attributes);
@@ -86,6 +88,46 @@ class Client extends BaseClient
                 return $exception instanceof ConnectionException;
             })->get($uri, $query);
 
-        return $response->json();
+        $body = $response->json();
+
+        $this->setNextPageQuery($body);
+
+        return $body;
+    }
+
+    protected function nextPage(array $response): ?int
+    {
+        if ($response['total_count'] <= $response['limit']) {
+            return null;
+        }
+
+        $last_page = (int) ceil($response['total_count'] / $response['limit']);
+        if ($last_page == $response['current_page']) {
+            return null;
+        }
+
+        return $response['current_page'] + 1;
+    }
+
+    protected function setNextPageQuery(array $response): static
+    {
+        $next_page = $this->nextPage($response);
+        if (! empty($next_page)) {
+            $this->next_page_query = [
+                'page' => $next_page,
+            ];
+        }
+
+        return $this;
+    }
+
+    public function hasNextPage(): bool
+    {
+        return ! empty($this->next_page_query);
+    }
+
+    public function nextPageQuery(): array
+    {
+        return $this->next_page_query;
     }
 }

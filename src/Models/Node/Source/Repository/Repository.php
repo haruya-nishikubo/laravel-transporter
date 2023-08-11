@@ -15,7 +15,7 @@ abstract class Repository
     protected string $end_cursor;
     protected array $query = [];
     protected array $logs = [];
-    protected array $next_queries = [];
+    protected array $next_page_query = [];
 
     abstract public function __construct(Node $node);
 
@@ -25,7 +25,7 @@ abstract class Repository
 
     abstract public function extract(): static;
 
-    abstract protected function setNextQueries(array $response): static;
+    abstract protected function setNextPageQuery(): static;
 
     public function collection(): Collection
     {
@@ -68,13 +68,13 @@ abstract class Repository
         return $this->logs;
     }
 
-    public function nextQueries(): array
+    public function nextPageQuery(): array
     {
-        return $this->next_queries;
+        return $this->next_page_query;
     }
 
-    public function hasNextQueries(): bool
+    public function hasNextPage(): bool
     {
-        return ! empty($this->next_queries);
+        return ! empty($this->next_page_query);
     }
 }

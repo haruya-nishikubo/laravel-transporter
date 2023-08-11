@@ -49,34 +49,17 @@ abstract class Repository extends BaseRepository
             ],
         ]);
 
+        $this->setNextPageQuery();
+
         return $this->client
             ->get($this->listUrl(), $this->query);
     }
 
-    protected function nextPage(array $response): ?int
+    protected function setNextPageQuery(): static
     {
-        if ($response['total_count'] <= $response['limit']) {
-            return null;
+        if ($this->client->hasNextPage()) {
+            $this->next_page_query = array_merge($this->query, $this->client->nextPageQuery());
         }
-
-        $last_page = (int) ceil($response['total_count'] / $response['limit']);
-        if ($last_page == $response['current_page']) {
-            return null;
-        }
-
-        return $response['current_page'] + 1;
-    }
-
-    protected function setNextQueries(array $response): static
-    {
-        $next_page = $this->nextPage($response);
-        if (empty($next_page)) {
-            return $this;
-        }
-
-        $this->next_queries = array_merge($this->query, [
-            'page' => $next_page,
-        ]);
 
         return $this;
     }
