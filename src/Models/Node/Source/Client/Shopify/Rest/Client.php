@@ -18,7 +18,6 @@ class Client extends BaseClient
     protected string $api_access_token;
 
     protected Rest $client;
-    protected array $next_page_query = [];
 
     public function __construct(array $attributes = [])
     {
@@ -82,22 +81,12 @@ class Client extends BaseClient
         return $response->getDecodedBody();
     }
 
-    protected function setNextPageQuery(PageInfo $page_info): static
+    protected function setNextPageQuery(?PageInfo $page_info): static
     {
         if (! empty($page_info)) {
             $this->next_page_query = $page_info->getNextPageQuery();
         }
 
         return $this;
-    }
-
-    public function hasNextPage(): bool
-    {
-        return ! empty($this->next_page_query);
-    }
-
-    public function nextPageQuery(): array
-    {
-        return $this->next_page_query;
     }
 }

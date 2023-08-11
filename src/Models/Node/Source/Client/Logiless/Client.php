@@ -20,8 +20,6 @@ class Client extends BaseClient
 
     protected int $merchant_id;
 
-    protected array $next_page_query = [];
-
     public function __construct(array $attributes = [])
     {
         $this->fill($attributes);
@@ -119,15 +117,5 @@ class Client extends BaseClient
         }
 
         return $this;
-    }
-
-    public function hasNextPage(): bool
-    {
-        return ! empty($this->next_page_query);
-    }
-
-    public function nextPageQuery(): array
-    {
-        return $this->next_page_query;
     }
 }
