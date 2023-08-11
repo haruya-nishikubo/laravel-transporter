@@ -23,4 +23,9 @@ class CollectRepository extends Repository
     {
         return 'collects';
     }
+
+    public function hasSubset(): bool
+    {
+        return true;
+    }
 }

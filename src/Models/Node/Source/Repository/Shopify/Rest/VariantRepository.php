@@ -34,4 +34,9 @@ class VariantRepository extends Repository
 
         return $this;
     }
+
+    public function hasSubset(): bool
+    {
+        return true;
+    }
 }

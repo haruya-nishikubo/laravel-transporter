@@ -77,4 +77,9 @@ abstract class Repository
     {
         return ! empty($this->next_page_query);
     }
+
+    public function hasSubset(): bool
+    {
+        return false;
+    }
 }

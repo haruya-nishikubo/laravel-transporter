@@ -35,4 +35,9 @@ class ProductRepository extends Repository
     {
         return 'products';
     }
+
+    public function hasSubset(): bool
+    {
+        return true;
+    }
 }

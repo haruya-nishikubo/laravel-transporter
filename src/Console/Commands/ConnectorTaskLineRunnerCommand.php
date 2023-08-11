@@ -96,7 +96,7 @@ class ConnectorTaskLineRunnerCommand extends Command
                 $this->registerConnectorTaskLineOfNextPage($this->source_repository->nextPageQuery());
             }
 
-            if ($this->hasSubset()) {
+            if ($this->source_repository->hasSubset()) {
                 foreach ($this->source_repository->collection() as $entity) {
                     $this->registerConnectorTaskLineOfSubset($entity);
                 }
@@ -308,17 +308,6 @@ class ConnectorTaskLineRunnerCommand extends Command
         }
 
         return $this;
-    }
-
-    protected function hasSubset(): bool
-    {
-        return in_array($this->connector_task_line->source_repository, [
-            ShopifyRestCustomerRepository::class,
-            ShopifyRestOrderRepository::class,
-            ShopifyRestProductRepository::class,
-            ShopifyRestVariantRepository::class,
-            ShopifyRestCollectRepository::class,
-        ]);
     }
 
     protected function createConnectorTaskLine(string $source_repository, array $source_repository_attributes): ConnectorTaskLine
