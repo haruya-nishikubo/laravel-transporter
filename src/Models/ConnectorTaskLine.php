@@ -47,7 +47,9 @@ class ConnectorTaskLine extends Model
     {
         $repository = new $this->source_repository($this->connectorTask->connector->sourceNode);
 
-        $repository->setAttributes($this->source_repository_attributes ?? []);
+        $repository->setStartCursor($this->connectorTask->start_cursor_at)
+            ->setEndCursor($this->connectorTask->end_cursor_at)
+            ->setAttributes($this->source_repository_attributes ?? []);
 
         return $repository;
     }

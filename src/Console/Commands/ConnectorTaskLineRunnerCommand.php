@@ -210,12 +210,6 @@ class ConnectorTaskLineRunnerCommand extends Command
     protected function extract(): self
     {
         $this->source_repository
-            ->setStartCursor($this->connector_task_line
-                ->connectorTask
-                ->start_cursor_at)
-            ->setEndCursor($this->connector_task_line
-                ->connectorTask
-                ->end_cursor_at)
             ->prepare()
             ->extract();
 
